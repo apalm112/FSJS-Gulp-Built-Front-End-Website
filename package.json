@@ -4,7 +4,7 @@
   "description": "Use Gulp to build a front end website.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
