@@ -17,8 +17,16 @@ const options = {
 	dist: 'dist`'
 };
 
+// This task may be redundant due to 'minifyScripts' task.  Delete it?
 gulp.task('concatScripts', function() {
-	gulp.src(['js/*/*', 'js/*'])
+	gulp.src(['js/**/*', 'js/*'])
 		.pipe(concat('all.min.js'))
 		.pipe(gulp.dest('js'));
+});
+
+gulp.task('minifyScripts', function() {
+	gulp.src(['js/*/*'])
+		.pipe(uglify())
+		.pipe(rename('all.min.js'))
+		.pipe(gulp.dest('dist/scripts/'));
 });
