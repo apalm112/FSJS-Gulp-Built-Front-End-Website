@@ -30,3 +30,26 @@ gulp.task('minifyScripts', function() {
 		.pipe(rename('all.min.js'))
 		.pipe(gulp.dest('dist/scripts/'));
 });
+
+gulp.task('styles', function() {
+	return gulp.src(['sass/global.scss'])
+			.pipe(sass())
+			.pipe(csso())
+			.pipe(rename('all.min.css'))
+			.pipe(gulp.dest('dist/styles/'));
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
