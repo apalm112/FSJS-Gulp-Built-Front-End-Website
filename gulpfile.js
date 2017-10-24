@@ -35,7 +35,15 @@ gulp.task('jsMap', function() {
 	.pipe(gulp.dest(options.dist + '/scripts'));
 });
 
-gulp.task('styles', function() {
+gulp.task('styles', ['cssMaps'], function() {
+	return gulp.src('sass/global.scss')
+		.pipe(sass())
+		.pipe(csso())
+		.pipe(rename('all.min.css'))
+		.pipe(gulp.dest(options.dist + '/styles'));
+});
+
+gulp.task('cssMaps', function() {
 	return gulp.src('sass/global.scss')
 		.pipe(maps.init())
 		.pipe(sass())
