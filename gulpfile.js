@@ -14,21 +14,22 @@ const gulp = require('gulp'),
 
 const options = {
 	src: 'src',
-	dist: 'dist`'
+	dist: 'dist'
 };
 
 // This task may be redundant due to 'minifyScripts' task.  Delete it?
 gulp.task('concatScripts', function() {
-	gulp.src(['js/**/*', 'js/*'])
-		.pipe(concat('all.min.js'))
-		.pipe(gulp.dest('js'));
+	return gulp.src(['js/**/*', 'js/*'])
+			.pipe(concat('all.js'))
+			.pipe(gulp.dest('js'));
 });
 
-gulp.task('minifyScripts', function() {
-	gulp.src(['js/*/*'])
+gulp.task('scripts', function() {
+	gulp.src(['js/**/*', 'js/*'])
+		.pipe(concat('all.js'))
 		.pipe(uglify())
 		.pipe(rename('all.min.js'))
-		.pipe(gulp.dest('dist/scripts/'));
+		.pipe(gulp.dest(options.dist + '/scripts/'));
 });
 
 gulp.task('styles', function() {
@@ -36,7 +37,7 @@ gulp.task('styles', function() {
 			.pipe(sass())
 			.pipe(csso())
 			.pipe(rename('all.min.css'))
-			.pipe(gulp.dest('dist/styles/'));
+			.pipe(gulp.dest(options.dist + '/styles/'));
 });
 
 
