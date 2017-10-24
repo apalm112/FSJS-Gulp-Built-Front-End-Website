@@ -25,6 +25,7 @@ gulp.task('scripts', ['jsMap'], function() {
 		.pipe(uglify())
 		.pipe(rename('all.min.js'))
 		.pipe(gulp.dest('dist/scripts/'));
+	del('dist/scripts/all.js');
 });
 
 gulp.task('jsMap', function() {
@@ -43,8 +44,13 @@ gulp.task('styles', function() {
 		.pipe(gulp.dest('dist/styles'));
 });
 
+gulp.task('clean', function() {
+	return del('dist/*');
+});
 
-
+gulp.task('default', ['clean'], function() {
+	// gulp.start('build');
+});
 
 
 
