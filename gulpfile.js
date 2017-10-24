@@ -10,21 +10,20 @@ const gulp = require('gulp'),
 	iff = require('gulp-if'),
 	csso = require('gulp-csso'),
 	concat = require('gulp-concat'),
+	imagemin = require('gulp-imagemin'),
 	del = require('del');
 
-// This task may be redundant due to 'minifyScripts' task.  Delete it?
-// gulp.task('concatScripts', function() {
-// 	return gulp.src(['js/**/*', 'js/*'])
-// 			.pipe(concat('all.js'))
-// 			.pipe(gulp.dest('js'));
-// });
+const options = {
+	src: 'src',
+	dist: 'dist'
+};
 
 gulp.task('scripts', ['jsMap'], function() {
 	gulp.src(['js/**/**', 'js/*'])
 		.pipe(concat('all.js'))
 		.pipe(uglify())
 		.pipe(rename('all.min.js'))
-		.pipe(gulp.dest('dist/scripts/'));
+		.pipe(gulp.dest(options.dist + '/scripts/'));
 	del('dist/scripts/all.js');
 });
 
@@ -33,7 +32,7 @@ gulp.task('jsMap', function() {
 	.pipe(maps.init())
 	.pipe(concat('all.js'))
 	.pipe(maps.write('./'))
-	.pipe(gulp.dest('dist/scripts'));
+	.pipe(gulp.dest(options.dist + '/scripts'));
 });
 
 gulp.task('styles', function() {
@@ -41,7 +40,13 @@ gulp.task('styles', function() {
 		.pipe(maps.init())
 		.pipe(sass())
 		.pipe(maps.write('./'))
-		.pipe(gulp.dest('dist/styles'));
+		.pipe(gulp.dest(options.dist + '/styles'));
+});
+
+gulp.task('images', function() {
+	return gulp.src('images/*')
+		.pipe(imagemin())
+		.pipe(gulp.dest(options.dist + '/content'));
 });
 
 gulp.task('clean', function() {
