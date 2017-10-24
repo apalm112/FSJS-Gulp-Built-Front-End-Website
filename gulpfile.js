@@ -38,7 +38,6 @@ gulp.task('jsMap', function() {
 gulp.task('styles', ['cssMaps'], function() {
 	return gulp.src('sass/global.scss')
 		.pipe(sass())
-		.pipe(csso())
 		.pipe(rename('all.min.css'))
 		.pipe(gulp.dest(options.dist + '/styles'));
 });
