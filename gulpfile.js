@@ -1,3 +1,4 @@
+/* eslint-disable */
 'use strict';
 
 // Require the needed npm modules.
@@ -11,67 +12,90 @@ const gulp = require('gulp'),
 	csso = require('gulp-csso'),
 	concat = require('gulp-concat'),
 	imagemin = require('gulp-imagemin'),
+	connect = require('gulp-connect'),
 	del = require('del');
 
+// Variables w/ path to source & dist folder.
 const options = {
 	src: 'src',
 	dist: 'dist'
 };
 
-gulp.task('scripts', ['jsMap'], function() {
-	gulp.src(['js/**/**', 'js/*'])
+gulp.task('scripts', ()=> {
+	return gulp.src([
+		options.src + '/js/circle/autogrow.js',
+		'/js/circle/circle.js',
+		'/js/global.js'])
+		.pipe(maps.init())
 		.pipe(concat('all.js'))
-		.pipe(uglify())
-		.pipe(rename('all.min.js'))
+		.pipe(maps.write('./'))
 		.pipe(gulp.dest(options.dist + '/scripts/'));
-	del('dist/scripts/all.js');
 });
 
-gulp.task('jsMap', function() {
-	return gulp.src('js/**/*')
-	.pipe(maps.init())
-	.pipe(concat('all.js'))
-	.pipe(maps.write('./'))
-	.pipe(gulp.dest(options.dist + '/scripts'));
+gulp.task('jsMinify', ['scripts'], ()=> {
+	// del('src/js/all.js');
+	return gulp.src(options.dist + '/scripts/all.js')
+	.pipe(uglify())
+	.pipe(rename('all.min.js'))
+	.pipe(gulp.dest(options.dist + '/scripts/'));
 });
 
-gulp.task('styles', ['cssMaps'], function() {
-	return gulp.src('sass/global.scss')
-		.pipe(sass())
-		.pipe(rename('all.min.css'))
-		.pipe(gulp.dest(options.dist + '/styles'));
-});
-
-gulp.task('cssMaps', function() {
-	return gulp.src('sass/global.scss')
+gulp.task('styles', ()=> {
+	// Maybe remove the globbing patterns for the *.sass files?  'src/sass/circle/_components.sass', 'src/sass/circle/_core.sass'
+	return gulp.src([options.src + '/sass/global.scss'])
 		.pipe(maps.init())
 		.pipe(sass())
 		.pipe(maps.write('./'))
-		.pipe(gulp.dest(options.dist + '/styles'));
+		.pipe(gulp.dest(options.dist + '/styles/'))
+		.pipe(gulp.dest(options.src + '/css/'));
 });
 
-gulp.task('images', function() {
-	return gulp.src('images/*')
+gulp.task('cssMinify', ['styles'], ()=> {
+	return gulp.src(options.dist + '/styles/global.css')
+		.pipe(csso())
+		.pipe(rename('all.min.css'))
+		.pipe(gulp.dest(options.dist + '/styles/'));
+});
+
+gulp.task('images', ()=> {
+	return gulp.src(options.src + '/images/*')
 		.pipe(imagemin())
 		.pipe(gulp.dest(options.dist + '/content'));
 });
 
-gulp.task('clean', function() {
-	return del('dist/*');
+gulp.task('clean', ()=> {
+	return del(['dist/*', 'src/css/', 'src/js/all.js', 'src/js/all.js.map']);
 });
 
-gulp.task('default', ['clean'], function() {
-	// gulp.start('build');
+gulp.task('html', ['jsMinify', 'cssMinify', 'images'], ()=> {
+	return gulp.src(options.src + '/index.html')
+		// useref() does file concatenation, but Not minification.
+		.pipe(useref())
+		.pipe(iff('*.js', uglify()))
+		.pipe(iff('*.css', csso()))
+		.pipe(gulp.dest(options.dist));
+});
+
+gulp.task('build', ['clean'], ()=> {
+	// gulp.start(['jsMinify','styles', 'images']);
+	gulp.start('html');
+	// Provide production files below:
+	return gulp.src(['css/global.css',
+	 								'dist/scripts/all.min.js',
+									'src/index.html',
+									'src/icons/**'],
+									{ base: './src/' })
+	//		'styles/global.css', 'scripts/all.min.js',
+		.pipe(gulp.dest('dist'));
 });
 
 
+gulp.task('default', ['clean'], ()=> {
+	gulp.start('build');
+	connect.server({ port: 7000 });
+});
 
-
-
-
-
-
-
-
-
+// gulp.task('watch', ()=> {
+// 	gulp.watch('sass/**/*.scss', ['styles']);
+// });
 //
