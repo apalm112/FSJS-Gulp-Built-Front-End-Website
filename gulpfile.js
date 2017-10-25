@@ -1,4 +1,3 @@
-/* eslint-disable */
 'use strict';
 
 // Require the needed npm modules.
@@ -89,13 +88,14 @@ gulp.task('build', ['clean'], ()=> {
 		.pipe(gulp.dest('dist'));
 });
 
-
-gulp.task('default', ['clean'], ()=> {
-	gulp.start('build');
-	connect.server({ port: 7000 });
+// DONE: Default Task
+	// The gulp command properly runs the build task as a dependency.
+	// The gulp command serves the project using a local webserver.
+gulp.task('default', ['build'], ()=> {
+	// gulp.start('build');
+	return connect.server({ port: 7000 });
 });
 
 // gulp.task('watch', ()=> {
 // 	gulp.watch('sass/**/*.scss', ['styles']);
 // });
-//

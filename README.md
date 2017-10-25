@@ -12,23 +12,23 @@ icons directory -- you can ignore this folder in your build process, but you wil
 ***********************************************************
 
 
-8 steps:
+TODO: 8 steps:
 
-1)  As a developer, I should be able to run the npm install command to install all of the dependencies for the build process.
+1)DONE  As a developer, I should be able to run the npm install command to install all of the dependencies for the build process.
 
 2)  As a developer, I should be able to run the gulp scripts command at the command line to concatenate, minify, and copy all of the project’s JavaScript files into an all.min.js file that is then copied to the dist/scripts folder.
 
-3)  As a developer, I should be able to run the gulp styles command at the command line to compile the project’s SCSS files into CSS, then concatenate and minify into an all.min.css file that is then copied to the dist/styles folder.
+3)DONE  As a developer, I should be able to run the gulp styles command at the command line to compile the project’s SCSS files into CSS, then concatenate and minify into an all.min.css file that is then copied to the dist/styles folder.
 
-4)  As a developer, when I run the gulp scripts or gulp styles commands at the command line, source maps are generated for the JavaScript and CSS files respectively.
+4)DONE  As a developer, when I run the gulp scripts or gulp styles commands at the command line, source maps are generated for the JavaScript and CSS files respectively.
 
-5)  As a developer, I should be able to run the gulp images command at the command line to optimize the size of the project’s JPEG and PNG files, and then copy those optimized images to the dist/content folder.
+5)DONE  As a developer, I should be able to run the gulp images command at the command line to optimize the size of the project’s JPEG and PNG files, and then copy those optimized images to the dist/content folder.
 
-6)  As a developer, I should be able to run the gulp clean command at the command line to delete all of the files and folders in the dist folder.
+6)DONE  As a developer, I should be able to run the gulp clean command at the command line to delete all of the files and folders in the dist folder.
 
-7)  As a developer, I should be able to run the gulp build command at the command line to run the clean, scripts, styles, and images tasks with confidence that the clean task completes before the other commands.
+7)DONE  As a developer, I should be able to run the gulp build command at the command line to run the clean, scripts, styles, and images tasks with confidence that the clean task completes before the other commands.
 
-8)  As a developer, I should be able to run the gulp command at the command line to run the build task and serve my project using a local web server.
+8)DONE  As a developer, I should be able to run the gulp command at the command line to run the build task and serve my project using a local web server.
 
 Extra Credit
 
