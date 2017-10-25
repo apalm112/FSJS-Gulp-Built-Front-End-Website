@@ -12,7 +12,8 @@ const gulp = require('gulp'),
 	concat = require('gulp-concat'),
 	imagemin = require('gulp-imagemin'),
 	connect = require('gulp-connect'),
-	del = require('del');
+	del = require('del'),
+	browserSync = require('browser-sync');
 
 // Variables w/ path to source & dist folder.
 const options = {
@@ -40,6 +41,7 @@ gulp.task('jsMinify', ()=> {
 
 gulp.task('styles', ()=> {
 	// Maybe remove the globbing patterns for the *.sass files?  'src/sass/circle/_components.sass', 'src/sass/circle/_core.sass'
+	// Compiles the SaSS into CSS, writes source map for SaSS files.
 	return gulp.src([options.src + '/sass/global.scss'])
 		.pipe(maps.init())
 		.pipe(sass())
@@ -86,7 +88,46 @@ gulp.task('default', ['build'], ()=> {
 	return connect.server({ port: 7000 });
 });
 
-// gulp.task('watch', ()=> {
-// TODO: Complete watch task.
-// 	gulp.watch('sass/**/*.scss', ['styles']);
-// });
+/* TODO: Complete watch task.  Exceeds:
+		The gulp command also listens for changes to any .scss file. When there is a change to any .scss file, the gulp styles command is run, the files are:  (compiled, concatenated)<--DONE BY sass() module, &
+		(minified)<--DONE BY csso() module, to the dist folder, and the browser reloads, displaying the changes
+		*/
+
+//	gulp.watch('files-to-watch', ['tasks', 'to', 'run']);
+gulp.task('watch', ['browser', 'watchMinify'], ()=> {
+	// When run, watches SaSS files for changes, runs styles task on change.
+	gulp.watch(options.src + '/sass/**/*.scss', ['watchMinify']);
+});
+
+gulp.task('browser', ()=> {
+	// Starts a local server, opens project in new browser tab.
+	browserSync.init({
+		server: {
+			baseDir: 'dist'
+		},
+	});
+});
+
+// gulp.task() takes 'styles' as dependency, is run as a dependency of 'watch' task, it will minify the global.css w/ csso().
+gulp.task('watchMinify', ['styles'], ()=> {
+	return gulp.src(options.dist + '/styles/global.css')
+		.pipe(csso())
+		.pipe(rename('all.min.css'))
+		.pipe(gulp.dest(options.dist + '/styles/'))
+		.pipe(browserSync.reload({
+			stream: true
+		}));
+});
+
+
+
+
+
+
+
+
+
+
+
+
+//
