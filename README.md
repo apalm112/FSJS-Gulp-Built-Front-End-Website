@@ -53,9 +53,6 @@ Source Maps
 	The gulp styles command generates CSS source maps
 
 Images Task
-The gulp images command is not found.
-The command does not decrease the size of any of the project’s JPEG or PNG files.
-The command does not copy the optimized images to the dist/content folder.
 The gulp images command copies the optimized images to the dist/content folder.
 
 Clean Task
