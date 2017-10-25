@@ -36,7 +36,7 @@ gulp.task('jsMinify', ()=> {
 	.pipe(gulp.dest(options.src + '/js/'));
 });
 
-gulp.task('styles', ()=> {
+gulp.task('cssMinify', ()=> {
 	// TODO: Check that source maps are working correctly in the browser.
 	// Maybe remove the globbing patterns for the *.sass files?  'src/sass/circle/_components.sass', 'src/sass/circle/_core.sass'
 	// Compiles the SaSS into CSS, writes source map for SaSS files.
@@ -46,6 +46,14 @@ gulp.task('styles', ()=> {
 		.pipe(maps.write('./'))
 		.pipe(gulp.dest(options.dist + '/styles/'))
 		.pipe(gulp.dest(options.src + '/css/'));
+});
+
+gulp.task('styles', ['cssMinify'], ()=> {
+	// Needed in order to meet rubric for styles task to compile, concat & minify all SaSS files.
+	return gulp.src(options.dist + '/styles/global.css')
+		.pipe(csso())
+		.pipe(rename('all.min.css'))
+		.pipe(gulp.dest(options.dist + '/styles/'));
 });
 
 gulp.task('images', ()=> {
@@ -103,11 +111,11 @@ gulp.task('browser', ()=> {
 });
 
 gulp.task('watchMinify', ['styles'], ()=> {
-	// This task runs 'styles' as dependency, & then itself is run as a dependency of the 'watch' task.  Then it will minify the global.css file w/ csso(), update the production directory file & update the browser.
-	return gulp.src(options.dist + '/styles/global.css')
-		.pipe(csso())
-		.pipe(rename('all.min.css'))
-		.pipe(gulp.dest(options.dist + '/styles/'))
+	// This task runs 'styles' as dependency, & then itself is run as a dependency of the 'watch' task.  Then it will minify the global.css file w/ csso(), update the production directory file & update the browser, displaying the changes.
+	return gulp.src(options.dist + '/styles/all.min.css')
+		// .pipe(csso())  '/styles/global.css'
+		// .pipe(rename('all.min.css'))
+		// .pipe(gulp.dest(options.dist + '/styles/'))
 		.pipe(browserSync.reload({
 			stream: true
 		}));
