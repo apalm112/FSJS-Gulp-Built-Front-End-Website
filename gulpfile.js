@@ -1,5 +1,5 @@
 'use strict';
-
+// TODO: Check that source maps are working correctly in the browser.
 // Require the needed npm modules.
 const gulp = require('gulp'),
 	uglify = require('gulp-uglify'),
@@ -20,26 +20,9 @@ const options = {
 	dist: 'dist'
 };
 
-/*gulp.task('scripts', ()=> {
-	// TODO: Fix bug, current format of concat, minify js files results in js/circle being left out & all.min.js being empty.  circle/autogrow.js is already minified.
-	return gulp.src([options.src + '/js/circle/circle.js'])
-	//	'/js/circle/autogrow.js', '/js/global.js'
-		.pipe(maps.init())
-		.pipe(concat('all.js'))
-		.pipe(maps.write('./'))
-		.pipe(gulp.dest(options.dist + '/scripts/'));
-});
-
-gulp.task('jsMinify', ['scripts'], ()=> {
-	// del('src/js/all.js');
-	return gulp.src(options.dist + '/scripts/all.js')
-		.pipe(uglify())
-		.pipe(rename('all.min.js'))
-		.pipe(gulp.dest(options.dist + '/scripts/'));
-});*/
 /**********************************************************/
 gulp.task('scripts', ['jsMinify'], ()=> {
-	// DONE Works!
+	// DONE Works!  scripts & jsMinify tasks successfuly minify & concat the two js files into all.min.js.
 	return gulp.src([options.src + '/js/circle/autogrow.js', options.src + '/js/circle.min.js'])
 		.pipe(maps.init())
 		.pipe(concat('all.min.js'))
@@ -47,6 +30,7 @@ gulp.task('scripts', ['jsMinify'], ()=> {
 		.pipe(gulp.dest(options.dist + '/scripts/'));
 });
 gulp.task('jsMinify', ()=> {
+	//	Minifies the one JS file that needs it.
 	return gulp.src(options.src + '/js/circle/circle.js')
 	.pipe(uglify())
 	.pipe(rename('circle.min.js'))
@@ -75,11 +59,9 @@ gulp.task('clean', ()=> {
 });
 
 gulp.task('html', ['scripts', 'styles', 'images'], ()=> {
-	// TODO: Fix bug!!!  Is overwriting the all.min.js leaving it empty!
 	return gulp.src(options.src + '/index.html')
-		// useref() does file concatenation, but Not minification.
-		.pipe(useref())
-		.pipe(iff('*.js', uglify()))
+		.pipe(useref())	// useref() does file concatenation, but Not minification.
+		.pipe(iff('*.js', uglify()))	// bug not this line
 		.pipe(iff('*.css', csso()))
 		.pipe(gulp.dest(options.dist));
 });
@@ -88,8 +70,8 @@ gulp.task('build', ['clean'], ()=> {
 	// gulp.start(['jsMinify','styles', 'images']);
 	gulp.start('html');
 	// Provide production files below:
-	return gulp.src([//'css/global.css',
-									// 'dist/scripts/all.min.js',
+	return gulp.src(['css/global.css',
+									'dist/scripts/all.min.js',
 									'src/index.html',
 									'src/icons/**'],
 									{ base: './src/' })
@@ -105,5 +87,6 @@ gulp.task('default', ['build'], ()=> {
 });
 
 // gulp.task('watch', ()=> {
+// TODO: Complete watch task.
 // 	gulp.watch('sass/**/*.scss', ['styles']);
 // });
