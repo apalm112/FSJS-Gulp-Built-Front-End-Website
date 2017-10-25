@@ -18,10 +18,10 @@
   },
   "homepage": "https://github.com/apalm112/Gulp-to-Build-A-Front-End-Website#readme",
   "devDependencies": {
+    "browser-sync": "^2.18.13",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
-    "gulp-connect": "^5.0.0",
     "gulp-csso": "^3.0.0",
     "gulp-if": "^2.0.2",
     "gulp-imagemin": "^3.4.0",
