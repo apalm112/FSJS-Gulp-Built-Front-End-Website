@@ -1,5 +1,4 @@
 'use strict';
-// TODO: Check that source maps are working correctly in the browser.
 // Require the needed npm modules.
 const gulp = require('gulp'),
 	uglify = require('gulp-uglify'),
@@ -11,7 +10,6 @@ const gulp = require('gulp'),
 	csso = require('gulp-csso'),
 	concat = require('gulp-concat'),
 	imagemin = require('gulp-imagemin'),
-	connect = require('gulp-connect'),
 	del = require('del'),
 	browserSync = require('browser-sync');
 
@@ -21,9 +19,9 @@ const options = {
 	dist: 'dist'
 };
 
-/**********************************************************/
+/* Gulp Tasks      *********************************************************/
 gulp.task('scripts', ['jsMinify'], ()=> {
-	// DONE Works!  scripts & jsMinify tasks successfuly minify & concat the two js files into all.min.js.
+	// Runs jsMinify task first, then creates source map, concats the two JS files.
 	return gulp.src([options.src + '/js/circle/autogrow.js', options.src + '/js/circle.min.js'])
 		.pipe(maps.init())
 		.pipe(concat('all.min.js'))
@@ -37,9 +35,9 @@ gulp.task('jsMinify', ()=> {
 	.pipe(rename('circle.min.js'))
 	.pipe(gulp.dest(options.src + '/js/'));
 });
-/**********************************************************/
 
 gulp.task('styles', ()=> {
+	// TODO: Check that source maps are working correctly in the browser.
 	// Maybe remove the globbing patterns for the *.sass files?  'src/sass/circle/_components.sass', 'src/sass/circle/_core.sass'
 	// Compiles the SaSS into CSS, writes source map for SaSS files.
 	return gulp.src([options.src + '/sass/global.scss'])
@@ -51,24 +49,28 @@ gulp.task('styles', ()=> {
 });
 
 gulp.task('images', ()=> {
+	// Uses gulp-imagemin module to optimize the images for production.
 	return gulp.src(options.src + '/images/*')
 		.pipe(imagemin())
 		.pipe(gulp.dest(options.dist + '/content'));
 });
 
 gulp.task('clean', ()=> {
+	// Deletes all of the files and folders in the dist folder & other files created from tasks.
 	return del(['dist/*', 'src/css/', 'src/js/all.js', 'src/js/all.js.map', 'src/js/circle.min.js']);
 });
 
 gulp.task('html', ['scripts', 'styles', 'images'], ()=> {
+	// Helper task for the build task to properly run the clean, scripts, styles & images tasks as dependencies.  Then any JS scripts & CSS links in the index.html get concated, minified for production.
 	return gulp.src(options.src + '/index.html')
 		.pipe(useref())	// useref() does file concatenation, but Not minification.
-		.pipe(iff('*.js', uglify()))	// bug not this line
+		.pipe(iff('*.js', uglify()))
 		.pipe(iff('*.css', csso()))
 		.pipe(gulp.dest(options.dist));
 });
 
 gulp.task('build', ['clean'], ()=> {
+	//  Runs the clean, scripts, styles, and images tasks. Setups the project development files into a folder for production.
 	// gulp.start(['jsMinify','styles', 'images']);
 	gulp.start('html');
 	// Provide production files below:
@@ -80,22 +82,14 @@ gulp.task('build', ['clean'], ()=> {
 		.pipe(gulp.dest('dist'));
 });
 
-// DONE: Default Task
-	// The gulp command properly runs the build task as a dependency.
-	// The gulp command serves the project using a local webserver.
 gulp.task('default', ['build'], ()=> {
-	// gulp.start('build');
-	return connect.server({ port: 7000 });
+	// When the default gulp command is run, it continuously watches for changes to any .scss file in the project.  Runs the build task as a dependency, then serves the project using a local webserver.
+	return gulp.start('watch');
 });
 
-/* TODO: Complete watch task.  Exceeds:
-		The gulp command also listens for changes to any .scss file. When there is a change to any .scss file, the gulp styles command is run, the files are:  (compiled, concatenated)<--DONE BY sass() module, &
-		(minified)<--DONE BY csso() module, to the dist folder, and the browser reloads, displaying the changes
-		*/
-
-//	gulp.watch('files-to-watch', ['tasks', 'to', 'run']);
 gulp.task('watch', ['browser', 'watchMinify'], ()=> {
-	// When run, watches SaSS files for changes, runs styles task on change.
+	// When run, watches SaSS files for changes, runs styles task on any changes to those files.
+	//	gulp.watch('files-to-watch', ['tasks', 'to', 'run']);
 	gulp.watch(options.src + '/sass/**/*.scss', ['watchMinify']);
 });
 
@@ -108,8 +102,8 @@ gulp.task('browser', ()=> {
 	});
 });
 
-// gulp.task() takes 'styles' as dependency, is run as a dependency of 'watch' task, it will minify the global.css w/ csso().
 gulp.task('watchMinify', ['styles'], ()=> {
+	// This task runs 'styles' as dependency, & then itself is run as a dependency of the 'watch' task.  Then it will minify the global.css file w/ csso(), update the production directory file & update the browser.
 	return gulp.src(options.dist + '/styles/global.css')
 		.pipe(csso())
 		.pipe(rename('all.min.css'))
@@ -118,16 +112,3 @@ gulp.task('watchMinify', ['styles'], ()=> {
 			stream: true
 		}));
 });
-
-
-
-
-
-
-
-
-
-
-
-
-//

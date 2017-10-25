@@ -33,7 +33,7 @@ TODO: 8 steps:
 Extra Credit
 
 To get an "exceeds" rating, you can expand on the project in the following ways:
- 1 step
+ 1)DONE step
 		As a developer, when I run the default gulp command, it should continuously watch for changes to any .scss file in my project. When there is a change to one of the .scss files, the gulp styles command is run and the files are compiled, concatenated, and minified to the dist folder. My project should then reload in the browser, displaying the changes.
 
 
