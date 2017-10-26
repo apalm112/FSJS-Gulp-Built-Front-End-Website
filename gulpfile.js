@@ -12,7 +12,7 @@ const gulp = require('gulp'),
 	imagemin = require('gulp-imagemin'),
 	del = require('del'),
 	browserSync = require('browser-sync');
-// Variables w/ path to source & dist folder.
+// Variables w/ path to source & dist folders.
 const options = {
 	src: 'src',
 	dist: 'dist'
@@ -21,17 +21,17 @@ const options = {
 /* Gulp Tasks      *********************************************************/
 gulp.task('scripts', ['jsMinify'], ()=> {
 	// Runs jsMinify task first, then creates source map, concats the two JS files.
-	return gulp.src([options.src + '/js/circle/autogrow.js', options.src + '/js/circle.min.js'])
+	return gulp.src([options.src + '/js/circle/autogrow.js', options.src + '/js/global.js'])
 		.pipe(maps.init())
 		.pipe(concat('all.min.js'))
 		.pipe(maps.write('./'))
 		.pipe(gulp.dest(options.dist + '/scripts/'));
 });
 gulp.task('jsMinify', ()=> {
-	//	Minifies the one JS file that needs it.
+	//	Minifies the one JS file that needs it, since js/autogrow.js is already minified.
 	return gulp.src(options.src + '/js/circle/circle.js')
 	.pipe(uglify())
-	.pipe(rename('circle.min.js'))
+	.pipe(rename('global.js'))
 	.pipe(gulp.dest(options.src + '/js/'));
 });
 
@@ -41,7 +41,7 @@ gulp.task('cssMinify', ()=> {
 		.pipe(sass())
 		.pipe(maps.write('./'))
 		.pipe(gulp.dest(options.dist + '/styles/'))
-		.pipe(gulp.dest(options.src + '/css/'));
+		.pipe(gulp.dest(options.src + '/css/'))
 });
 
 gulp.task('styles', ['cssMinify'], ()=> {
@@ -61,7 +61,7 @@ gulp.task('images', ()=> {
 
 gulp.task('clean', ()=> {
 	// Deletes all of the files and folders in the dist folder & other files created from tasks.
-	return del(['dist/*', 'src/css/', 'src/js/circle.min.js']);
+	return del(['dist/*', 'src/css/', 'src/js/global.js']);
 });
 
 gulp.task('html', ['scripts', 'styles', 'images'], ()=> {
