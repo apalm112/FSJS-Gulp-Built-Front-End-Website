@@ -12,7 +12,6 @@ const gulp = require('gulp'),
 	imagemin = require('gulp-imagemin'),
 	del = require('del'),
 	browserSync = require('browser-sync');
-
 // Variables w/ path to source & dist folder.
 const options = {
 	src: 'src',
@@ -38,10 +37,9 @@ gulp.task('jsMinify', ()=> {
 
 gulp.task('cssMinify', ()=> {
 	// TODO: Check that source maps are working correctly in the browser.
-	// Maybe remove the globbing patterns for the *.sass files?  'src/sass/circle/_components.sass', 'src/sass/circle/_core.sass'
-	// Compiles the SaSS into CSS, writes source map for SaSS files.
-	return gulp.src([options.src + '/sass/global.scss'])
-		.pipe(maps.init())
+	return gulp.src(options.src + '/sass/global.scss')
+		.pipe(maps.init({ largeFile: true, loadMaps: true }))
+		// .pipe(maps.identityMap())
 		.pipe(sass())
 		.pipe(maps.write('./'))
 		.pipe(gulp.dest(options.dist + '/styles/'))
@@ -71,9 +69,9 @@ gulp.task('clean', ()=> {
 gulp.task('html', ['scripts', 'styles', 'images'], ()=> {
 	// Helper task for the build task to properly run the clean, scripts, styles & images tasks as dependencies.  Then any JS scripts & CSS links in the index.html get concated, minified for production.
 	return gulp.src(options.src + '/index.html')
-		.pipe(useref())	// useref() does file concatenation, but Not minification.
 		.pipe(iff('*.js', uglify()))
 		.pipe(iff('*.css', csso()))
+		.pipe(useref())
 		.pipe(gulp.dest(options.dist));
 });
 
@@ -113,9 +111,11 @@ gulp.task('browser', ()=> {
 gulp.task('watchMinify', ['styles'], ()=> {
 	// This task runs 'styles' as dependency, & then itself is run as a dependency of the 'watch' task.  Then it will minify the global.css file w/ csso(), update the production directory file & update the browser, displaying the changes.
 	return gulp.src(options.dist + '/styles/all.min.css')
-		// .pipe(csso())  '/styles/global.css'
+		.pipe(csso())  // '/styles/global.css'
 		// .pipe(rename('all.min.css'))
 		// .pipe(gulp.dest(options.dist + '/styles/'))
+		.pipe(useref())
+		// .pipe(gulp.dest(options.dist))
 		.pipe(browserSync.reload({
 			stream: true
 		}));
