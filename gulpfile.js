@@ -49,10 +49,7 @@ gulp.task('styles', ['cssMinify'], ()=> {
 	return gulp.src(options.dist + '/styles/global.css')
 		.pipe(csso())
 		.pipe(rename('all.min.css'))
-		.pipe(gulp.dest(options.dist + '/styles/'))
-		.pipe(browserSync.reload({
-			stream: true
-		}));
+		.pipe(gulp.dest(options.dist + '/styles/'));
 });
 
 gulp.task('images', ()=> {
@@ -64,11 +61,11 @@ gulp.task('images', ()=> {
 
 gulp.task('clean', ()=> {
 	// Deletes all of the files and folders in the dist folder & other files created from tasks.
-	return del(['dist/*', 'src/css/', 'src/js/all.js', 'src/js/all.js.map', 'src/js/circle.min.js']);
+	return del(['dist/*', 'src/css/', 'src/js/circle.min.js']);
 });
 
 gulp.task('html', ['scripts', 'styles', 'images'], ()=> {
-	// Helper task for the build task to properly run the clean, scripts, styles & images tasks as dependencies.  Then any JS scripts & CSS links in the index.html get concated, minified for production.
+	// Runs the clean, scripts, styles & images tasks as dependencies.  Then any JS scripts & CSS links in the index.html get concated, minified for production.
 	return gulp.src(options.src + '/index.html')
 		.pipe(iff('*.js', uglify()))
 		.pipe(iff('*.css', csso()))
@@ -78,7 +75,6 @@ gulp.task('html', ['scripts', 'styles', 'images'], ()=> {
 
 gulp.task('build', ['clean'], ()=> {
 	//  Runs the clean, scripts, styles, and images tasks. Setups the project development files into a folder for production.
-	// gulp.start(['jsMinify','styles', 'images']);
 	gulp.start('html');
 	// Provide production files below:
 	return gulp.src(['src/index.html',
@@ -89,38 +85,22 @@ gulp.task('build', ['clean'], ()=> {
 
 gulp.task('default', ['build'], ()=> {
 	// When the default gulp command is run, it continuously watches for changes to any .scss file in the project.  Runs the build task as a dependency, then serves the project using a local webserver.
-	return gulp.start('watch');
-});
-
-gulp.task('watch', ['browser'], ()=> {
-	// When run, watches SaSS files for changes, runs styles task on any changes to those files.
-	//	gulp.watch('files-to-watch', ['tasks', 'to', 'run']);
-	gulp.watch(options.src + '/sass/**/*.scss', ['watchMinify']);
-});
-
-gulp.task('browser', ()=> {
-	// Starts a local server, opens project in new browser tab.
 	browserSync.init({
 		server: {
 			baseDir: 'dist'
-		},
+		}
 	});
+	gulp.watch(options.src + '/sass/**/*.scss', ['watchMinify']);
 });
-// TODO: Fix bug, watchMinify breaks teh sourcemap from working in chrome dev console.
+
 gulp.task('watchMinify', ['styles'], ()=> {
 	// This task runs 'styles' as dependency, & then itself is run as a dependency of the 'watch' task.  Then it will minify the global.css file w/ csso(), update the production directory file & update the browser, displaying the changes.
-	// return gulp.src(options.dist + '/styles/*')
 	return gulp.src(options.src + '/index.html')
 		.pipe(iff('*.js', uglify()))
 		.pipe(iff('*.css', csso()))
 		.pipe(useref())
-		.pipe(gulp.dest(options.dist));
+		.pipe(gulp.dest(options.dist))
+		.pipe(browserSync.reload({
+			stream: true
+		}));
 });
-
-
-
-
-
-
-
-//
