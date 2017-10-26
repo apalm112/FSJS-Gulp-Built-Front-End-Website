@@ -36,10 +36,8 @@ gulp.task('jsMinify', ()=> {
 });
 
 gulp.task('cssMinify', ()=> {
-	// TODO: Check that source maps are working correctly in the browser.
 	return gulp.src(options.src + '/sass/global.scss')
 		.pipe(maps.init({ largeFile: true, loadMaps: true }))
-		// .pipe(maps.identityMap())
 		.pipe(sass())
 		.pipe(maps.write('./'))
 		.pipe(gulp.dest(options.dist + '/styles/'))
@@ -51,7 +49,10 @@ gulp.task('styles', ['cssMinify'], ()=> {
 	return gulp.src(options.dist + '/styles/global.css')
 		.pipe(csso())
 		.pipe(rename('all.min.css'))
-		.pipe(gulp.dest(options.dist + '/styles/'));
+		.pipe(gulp.dest(options.dist + '/styles/'))
+		.pipe(browserSync.reload({
+			stream: true
+		}));
 });
 
 gulp.task('images', ()=> {
@@ -80,9 +81,7 @@ gulp.task('build', ['clean'], ()=> {
 	// gulp.start(['jsMinify','styles', 'images']);
 	gulp.start('html');
 	// Provide production files below:
-	return gulp.src(['css/global.css',
-									'dist/scripts/all.min.js',
-									'src/index.html',
+	return gulp.src(['src/index.html',
 									'src/icons/**'],
 									{ base: './src/' })
 		.pipe(gulp.dest('dist'));
@@ -93,7 +92,7 @@ gulp.task('default', ['build'], ()=> {
 	return gulp.start('watch');
 });
 
-gulp.task('watch', ['browser', 'watchMinify'], ()=> {
+gulp.task('watch', ['browser'], ()=> {
 	// When run, watches SaSS files for changes, runs styles task on any changes to those files.
 	//	gulp.watch('files-to-watch', ['tasks', 'to', 'run']);
 	gulp.watch(options.src + '/sass/**/*.scss', ['watchMinify']);
@@ -107,16 +106,21 @@ gulp.task('browser', ()=> {
 		},
 	});
 });
-
+// TODO: Fix bug, watchMinify breaks teh sourcemap from working in chrome dev console.
 gulp.task('watchMinify', ['styles'], ()=> {
 	// This task runs 'styles' as dependency, & then itself is run as a dependency of the 'watch' task.  Then it will minify the global.css file w/ csso(), update the production directory file & update the browser, displaying the changes.
-	return gulp.src(options.dist + '/styles/all.min.css')
-		.pipe(csso())  // '/styles/global.css'
-		// .pipe(rename('all.min.css'))
-		// .pipe(gulp.dest(options.dist + '/styles/'))
+	// return gulp.src(options.dist + '/styles/*')
+	return gulp.src(options.src + '/index.html')
+		.pipe(iff('*.js', uglify()))
+		.pipe(iff('*.css', csso()))
 		.pipe(useref())
-		// .pipe(gulp.dest(options.dist))
-		.pipe(browserSync.reload({
-			stream: true
-		}));
+		.pipe(gulp.dest(options.dist));
 });
+
+
+
+
+
+
+
+//
