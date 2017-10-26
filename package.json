@@ -1,19 +1,34 @@
 {
-  "name": "gulp",
+  "name": "Project8",
   "version": "1.0.0",
-  "description": "Use Gulp to build a front end website.",
-  "main": "index.js",
+  "description": "********************************************************** The build process must fulfill the following criteria: \t* Concatenate and minify the JavaScript files \t* Compile SCSS into CSS in a concatenated and minified file \t* Generate JavaScript and CSS source maps \t* Compress any JPEG or PNG files \t* All output for the build process should be in a dist folder for distribution or deployment.",
+  "main": "gulpfile.js",
   "scripts": {
-    "test": "mocha"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/apalm112/Gulp-to-Build-A-Front-End-Website.git"
   },
-  "author": "Adam Palmer",
-  "license": "MIT",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/apalm112/Gulp-to-Build-A-Front-End-Website/issues"
   },
-  "homepage": "https://github.com/apalm112/Gulp-to-Build-A-Front-End-Website#readme"
+  "homepage": "https://github.com/apalm112/Gulp-to-Build-A-Front-End-Website#readme",
+  "devDependencies": {
+    "browser-sync": "^2.18.13",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-csso": "^3.0.0",
+    "gulp-if": "^2.0.2",
+    "gulp-imagemin": "^3.4.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.6.1",
+    "gulp-uglify": "^3.0.0",
+    "gulp-useref": "^3.1.2"
+  }
 }
