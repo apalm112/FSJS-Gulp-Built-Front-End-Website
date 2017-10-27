@@ -21,7 +21,7 @@ const options = {
 };
 
 /* Gulp Tasks      *********************************************************/
-// Runs jsMinify task first, then creates source map, concats the two JS files.
+// TODO: THIS BRANCH IS FOR CHECKING ALL THE TASKS ARE WORKING.
 gulp.task('scripts', (callback) => {
 	pump([
 		gulp.src([options.src + '/js/circle/*.js']),
@@ -29,23 +29,13 @@ gulp.task('scripts', (callback) => {
 		concat('all.min.js'),
 		uglify(),
 		maps.write('./'),
-		gulp.dest(options.dist + '/scripts/')
+		gulp.dest(options.src + '/scripts/'),
+		// rename('all.min.js'),
+		gulp.dest(options.src + '/scripts/')
 	],
 	callback
 	);
 });
-
-/*gulp.task('jsMinify', (callback) => {
-	//	Minifies the one JS file that needs it, since js/autogrow.js is already minified.
-	pump([
-		gulp.src(options.src + '/js/circle/*.js'),
-		rename('global.js'),
-		gulp.dest(options.src + '/js/')
-	],
-	callback
-	);
-});*/
-
 gulp.task('cssMinify', (callback) => {
 	pump([
 		gulp.src(options.src + '/sass/global.scss'),
