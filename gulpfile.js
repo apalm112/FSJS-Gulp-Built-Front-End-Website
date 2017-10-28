@@ -11,7 +11,7 @@ const gulp = require('gulp'),
 	concat = require('gulp-concat'),
 	imagemin = require('gulp-imagemin'),
 	del = require('del'),
-	browserSync = require('browser-sync'),
+	browserSync = require('browser-sync').create(),
 	pump = require('pump'),  // pump is a wrapper for .pipe that gives moar readable error messages.
 	QPromise = require('q');  //	https://www.npmjs.com/package/q
 
