@@ -39,11 +39,11 @@ gulp.task('scripts', (callback) => {
 gulp.task('cssMinify', (callback) => {
 	pump([
 		gulp.src(options.src + '/sass/global.scss'),
+		// rename('all.scss'),
 		maps.init({ largeFile: true }),
 		sass(),
 		maps.write('./'),
-		gulp.dest(options.dist + '/styles/'),
-		gulp.dest(options.src + '/css/'),
+		gulp.dest(options.src + '/styles/')
 	],
 	callback
 	);
@@ -51,11 +51,10 @@ gulp.task('cssMinify', (callback) => {
 // Needed in order to meet rubric for styles task to compile, concat & minify all SaSS files.
 gulp.task('styles', ['cssMinify'], (callback) => {
 	pump([
-		gulp.src(options.dist + '/styles/global.css'),
-		csso(),
+		gulp.src(options.src + '/styles/global.css'),
+		csso(),  // Minifies
 		rename('all.min.css'),
-		gulp.dest(options.dist + '/styles/'),
-		gulp.dest(options.src + '/css/'),
+		gulp.dest(options.src + '/styles/'),
 		browserSync.reload({
 			stream: true
 		})
