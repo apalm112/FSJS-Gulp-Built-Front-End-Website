@@ -52,7 +52,7 @@ gulp.task('cssMinify', (callback) => {
 gulp.task('styles', ['cssMinify'], (callback) => {
 	pump([
 		gulp.src(options.src + '/styles/global.css'),
-		csso(),  // Minifies
+		csso( '.test {color: #ff0000;}, {debug: 3}'),  // Minifies
 		rename('all.min.css'),
 		gulp.dest(options.src + '/styles/'),
 		browserSync.reload({
@@ -75,7 +75,7 @@ gulp.task('images', (callback) => {
 });
 gulp.task('clean', ()=> {
 	// Deletes all of the files and folders in the dist folder & other files created from tasks.
-	return del(['dist/*', 'src/css/']);
+	return del(['dist/*', 'src/scripts/*', 'src/styles/*']);
 });
 // Takes the index.html file & runs it thru useref().  Runs the clean, scripts, styles & images tasks as dependencies.  Then any JS scripts & CSS links in the index.html get concated, minified for production.
 gulp.task('html', ['scripts', 'styles', 'images'], (callback)=> {
@@ -97,31 +97,23 @@ gulp.task('html', ['scripts', 'styles', 'images'], (callback)=> {
 	);
 });
 //  Runs the clean, scripts, styles, and images tasks. Setups the project development files into a folder for production.
-gulp.task('build', ['clean'], (callback) => {
-	pump([
-		gulp.start('html'),
-		// Provide static production files below:
-		gulp.src(['src/icons/**/*',
-							'src/index.html'],
-							{ base: './src/' }),
-		gulp.dest('dist')
-	],
-	callback
-	);
+gulp.task('build', ['clean'], () => {
+	gulp.start('scripts', 'styles', 'images');
+	// Provide static production files below:
+	return gulp.src(['src/icons/**/*',
+									'src/index.html'],
+									{ base: './src/' })
+		.pipe(gulp.dest('dist'));
 });
 
-gulp.task('default', ['build'], (callback) => {
+gulp.task('default', ['build'], () => {
 	// When the default gulp command is run, it continuously watches for changes to any .scss file in the project.  Runs the build task as a dependency, then serves the project using a local webserver.
-	pump([
-		gulp.start('watchFiles'),
-		browserSync.init({
-			server: {
-				baseDir: 'dist'
-			}
-		})
-	],
-	callback
-	);
+	return browserSync.init({
+		server: {
+			baseDir: 'src'
+		}
+	});
+	// return gulp.start('watchFiles');
 });
 
 // This task runs 'styles' as dependency, & then itself is run as a dependency of the 'watch' task.  Then it will minify the global.css file w/ csso(), update the production directory file & update the browser, displaying the changes.
