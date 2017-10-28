@@ -68,7 +68,7 @@ gulp.task('images', (callback) => {
 	pump([
 		gulp.src(options.src + '/images/*'),
 		imagemin(),
-		gulp.dest(options.dist + '/content')
+		gulp.dest(options.src + '/content')
 	],
 	callback
 	);
