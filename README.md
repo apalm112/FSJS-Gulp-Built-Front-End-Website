@@ -6,7 +6,7 @@
 	* gulp clean
 	* gulp scripts
 	* gulp styles
+	* gulp images
 	* gulp build
 	* gulp 
-
 ***********************************************************
