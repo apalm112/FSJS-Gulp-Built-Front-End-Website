@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/apalm112/Gulp-to-Build-A-Front-End-Website.git"
+    "url": "git+"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/apalm112/Gulp-to-Build-A-Front-End-Website/issues"
+    "url": ""
   },
-  "homepage": "https://github.com/apalm112/Gulp-to-Build-A-Front-End-Website#readme",
+  "homepage": "",
   "devDependencies": {
     "browser-sync": "^2.18.13",
     "del": "^3.0.0",
