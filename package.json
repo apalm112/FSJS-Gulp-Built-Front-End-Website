@@ -1,7 +1,7 @@
 {
   "name": "Project8",
   "version": "1.0.0",
-  "description": "********************************************************** The build process must fulfill the following criteria: \t* Concatenate and minify the JavaScript files \t* Compile SCSS into CSS in a concatenated and minified file \t* Generate JavaScript and CSS source maps \t* Compress any JPEG or PNG files \t* All output for the build process should be in a dist folder for distribution or deployment.",
+  "description": "",
   "main": "gulpfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -31,7 +31,6 @@
     "gulp-uglify": "^3.0.0",
     "gulp-useref": "^3.1.2",
     "pump": "^1.0.2",
-    "q": "^1.5.1",
     "run-sequence": "^2.2.0"
   }
 }
