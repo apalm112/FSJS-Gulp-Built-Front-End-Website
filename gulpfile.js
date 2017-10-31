@@ -107,8 +107,18 @@ gulp.task('server', () => {
 	// Start local webserver displaying the project files, refreshes on change to any .scss file.
 	browserSync.init({
 		server: {
-			baseDir: 'src'
+			baseDir: 'dist'
 		}
 	});
 	gulp.watch(options.src + '/sass/**/*.scss', ['styles']);
+	gulp.watch(options.src + '/js/**/*.js', browserSync.reload);
+	gulp.watch(options.dist + '/index.html', browserSync.reload);
 });
+
+/********************************************************************
+TODO: Refactor for:
+Don't forget that source maps don't need to be included in your html. They connect to each other through the css so there is no need to include it. If you delete it you will see that it works. Also i noticed that in your html file you are not including the minified version. This defeats the whole idea of concatenating and minifying doesn't it. This isn't asked of in this project(although before it was and they took it out) yet I think it's an important tool to know. So being able to change the css and js includes so that your production html will include the correct files is kinda important. Here is a link you might find useful incase you want to read up and add it to your project. It's actually super simple https://css-tricks.com/gulp-for-beginners/
+
+You can also set up browser sync to work for your html too so if you changed some html it would also reload and build etc and you can add it for js too. Again not asked for in this project so just pointing it out incase you wanted to dig deeper and take better use of gulp for future projects or just general knowledge.
+
+***************************************************************************/
