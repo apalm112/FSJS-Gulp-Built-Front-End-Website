@@ -1,0 +1,17 @@
+# stuff to ignore
+# Logs
+logs
+*.log
+dist/*
+
+# Dependency directory
+node_modules
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+#eslint
+.eslint*
