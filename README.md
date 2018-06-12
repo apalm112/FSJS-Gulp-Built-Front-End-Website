@@ -1,8 +1,8 @@
 ## Full Stack JavaScript Program
 
 ## Project #8: Use Gulp to Build A Front-End Website
-**********************************************************
-###Installation
+
+### Installation
 -----------------------------------------------------------
 Clone the GitHub repository and use `npm` to install the dependencies.
 ```
