@@ -2,9 +2,15 @@
 
 ## Project #8: Use Gulp to Build A Front-End Website
 **********************************************************
-* To run the script, clone the repo.
-* ```cd``` into the project directory
-* Run ```npm install```
+###Installation
+-----------------------------------------------------------
+Clone the GitHub repository and use `npm` to install the dependencies.
+```
+$ git clone https://github.com/apalm112/FSJS-Gulp-Built-Front-End-Website.git
+$ cd FSJS-Gulp-Built-Front-End-Website/
+$ npm install
+```
+
 * Then you can run any of the following commands:
 	* ```gulp scripts```
 	* ```gulp styles```
